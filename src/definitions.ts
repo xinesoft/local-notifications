@@ -599,11 +599,22 @@ export interface LocalNotificationSchema {
    * this option should be the drawable resource ID, which is the filename
    * without an extension.
    *
+   * It can be a valid Base64 url.
+   *
    * Only available for Android.
    *
    * @since 1.0.0
    */
   largeIcon?: string;
+
+  /**
+   * Set circled shape to the large icon.
+   *
+   * Only available for Android.
+   *
+   * @since 1.0.0
+   */
+  circledLargeIcon?: boolean;
 
   /**
    * Set the color of the notification icon.
