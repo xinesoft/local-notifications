@@ -764,7 +764,7 @@ export interface Schedule {
    *
    * @since 1.0.0
    */
-  at?: Date;
+  at?: string;
 
   /**
    * Repeat delivery of this notification at the date and time specified by
