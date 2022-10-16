@@ -245,6 +245,7 @@ public class LocalNotificationManager {
                 LocalNotificationsPlugin.fireReceived(notificationJson);
             } catch (JSONException e) {}
             notificationManager.notify(localNotification.getId(), buildNotification);
+            storage.deleteNotification(localNotification.getId().toString());
         }
     }
 

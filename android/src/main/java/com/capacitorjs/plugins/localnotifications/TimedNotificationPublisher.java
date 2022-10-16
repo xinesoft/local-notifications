@@ -37,9 +37,7 @@ public class TimedNotificationPublisher extends BroadcastReceiver {
         JSObject notificationJson = storage.getSavedNotificationAsJSObject(Integer.toString(id));
         LocalNotificationsPlugin.fireReceived(notificationJson);
         notificationManager.notify(id, notification);
-        if (!rescheduleNotificationIfNeeded(context, intent, id)) {
-            storage.deleteNotification(Integer.toString(id));
-        }
+        storage.deleteNotification(Integer.toString(id));
     }
 
     private boolean rescheduleNotificationIfNeeded(Context context, Intent intent, int id) {
