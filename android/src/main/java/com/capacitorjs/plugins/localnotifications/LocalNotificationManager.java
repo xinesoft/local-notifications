@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioAttributes;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,7 +47,8 @@ public class LocalNotificationManager {
     public static final String NOTIFICATION_IS_REMOVABLE_KEY = "LocalNotificationRepeating";
     public static final String REMOTE_INPUT_KEY = "LocalNotificationRemoteInput";
 
-    public static final String DEFAULT_NOTIFICATION_CHANNEL_ID = "default";
+    public static final String DEFAULT_NOTIFICATION_CHANNEL_ID = "notification";
+    public static final String DEFAULT_RINGTONE_CHANNEL_ID = "ringtone";
     private static final String DEFAULT_PRESS_ACTION = "tap";
 
     private Context context;
@@ -104,11 +107,12 @@ public class LocalNotificationManager {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Default";
-            String description = "Default";
-            int importance = android.app.NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(DEFAULT_NOTIFICATION_CHANNEL_ID, name, importance);
-            channel.setDescription(description);
+            NotificationChannel channel = new NotificationChannel(
+                DEFAULT_NOTIFICATION_CHANNEL_ID,
+                DEFAULT_NOTIFICATION_CHANNEL_ID,
+                NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription(DEFAULT_NOTIFICATION_CHANNEL_ID);
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .setUsage(AudioAttributes.USAGE_ALARM)
@@ -117,9 +121,29 @@ public class LocalNotificationManager {
             if (soundUri != null) {
                 channel.setSound(soundUri, audioAttributes);
             }
+
+            // Channel Ringtone
+            NotificationChannel channelRingTone = new NotificationChannel(
+                DEFAULT_RINGTONE_CHANNEL_ID,
+                DEFAULT_RINGTONE_CHANNEL_ID,
+                NotificationManager.IMPORTANCE_HIGH
+            );
+            channelRingTone.setDescription(DEFAULT_RINGTONE_CHANNEL_ID);
+            AudioAttributes audioAttributesRingTone = new AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .build();
+
+            Uri soundUriRingTone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+
+            if (soundUriRingTone != null) {
+                channelRingTone.setSound(soundUriRingTone, audioAttributesRingTone);
+            }
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             android.app.NotificationManager notificationManager = context.getSystemService(android.app.NotificationManager.class);
+
+            notificationManager.createNotificationChannel(channelRingTone);
             notificationManager.createNotificationChannel(channel);
         }
     }

@@ -4,13 +4,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.util.Base64;
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
@@ -37,7 +30,6 @@ public class LocalNotification {
     private String sound;
     private String smallIcon;
     private String largeIcon;
-    private boolean circledLargeIcon;
     private String iconColor;
     private String actionTypeId;
     private String group;
@@ -117,10 +109,6 @@ public class LocalNotification {
 
     public void setLargeIcon(String largeIcon) {
         this.largeIcon = largeIcon;
-    }
-
-    public void setCircledLargeIcon(boolean circledLargeIcon) {
-        this.circledLargeIcon = circledLargeIcon;
     }
 
     public void setInboxList(List<String> inboxList) {
@@ -267,7 +255,6 @@ public class LocalNotification {
         localNotification.setTitle(jsonObject.getString("title"));
         localNotification.setSmallIcon(jsonObject.getString("smallIcon"));
         localNotification.setLargeIcon(jsonObject.getString("largeIcon"));
-        localNotification.setCircledLargeIcon(jsonObject.getBoolean("circledLargeIcon", false));
         localNotification.setIconColor(jsonObject.getString("iconColor"));
         localNotification.setAttachments(LocalNotificationAttachment.getAttachments(jsonObject));
         localNotification.setGroupSummary(jsonObject.getBoolean("groupSummary", false));
@@ -370,10 +357,6 @@ public class LocalNotification {
             int resId = AssetUtil.getResourceID(context, resLargeIcon, "drawable");
 
             bitmap = BitmapFactory.decodeResource(context.getResources(), resId);
-        }
-
-        if (circledLargeIcon) {
-            return getCircleBitmap(bitmap);
         }
 
         return bitmap;
@@ -488,33 +471,5 @@ public class LocalNotification {
 
     public void setSource(String source) {
         this.source = source;
-    }
-
-    private Bitmap getCircleBitmap(Bitmap bitmap) {
-        if (bitmap == null) {
-            return null;
-        }
-
-        final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        final Canvas canvas = new Canvas(output);
-        final int color = Color.RED;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        final RectF rectF = new RectF(rect);
-
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        float cx = bitmap.getWidth() / 2;
-        float cy = bitmap.getHeight() / 2;
-        float radius = cx < cy ? cx : cy;
-        canvas.drawCircle(cx, cy, radius, paint);
-
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-
-        bitmap.recycle();
-
-        return output;
     }
 }

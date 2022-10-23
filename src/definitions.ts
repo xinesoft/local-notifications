@@ -608,15 +608,6 @@ export interface LocalNotificationSchema {
   largeIcon?: string;
 
   /**
-   * Set circled shape to the large icon.
-   *
-   * Only available for Android.
-   *
-   * @since 1.0.0
-   */
-  circledLargeIcon?: boolean;
-
-  /**
    * Set the color of the notification icon.
    *
    * Only available for Android.

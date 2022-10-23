@@ -11,3 +11,6 @@ const LocalNotifications = registerPlugin<LocalNotificationsPlugin>(
 
 export * from './definitions';
 export { LocalNotifications };
+
+export const DEFAULT_NOTIFICATION_CHANNEL_ID = 'notification';
+export const DEFAULT_RINGTONE_CHANNEL_ID = 'ringtone';
