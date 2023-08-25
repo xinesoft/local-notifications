@@ -51,7 +51,7 @@ In `capacitor.config.json`:
 In `capacitor.config.ts`:
 
 ```ts
-/// <reference types="@capacitor/local-notifications" />
+/// <reference types="@xinesoft/local-notifications" />
 
 import { CapacitorConfig } from '@capacitor/cli';
 
