@@ -543,6 +543,8 @@ export interface LocalNotificationSchema {
   summaryText?: string;
   /**
    * The notification identifier.
+   * On Android it's a 32-bit int.
+   * So the value should be between -2147483648 and 2147483647 inclusive.
    *
    * @since 1.0.0
    */
@@ -598,8 +600,6 @@ export interface LocalNotificationSchema {
    * Icons should be placed in your app's `res/drawable` folder. The value for
    * this option should be the drawable resource ID, which is the filename
    * without an extension.
-   *
-   * It can be a valid Base64 url.
    *
    * Only available for Android.
    *
@@ -755,7 +755,7 @@ export interface Schedule {
    *
    * @since 1.0.0
    */
-  at?: string;
+  at?: Date;
 
   /**
    * Repeat delivery of this notification at the date and time specified by

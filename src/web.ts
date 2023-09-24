@@ -141,7 +141,7 @@ export class LocalNotificationsWeb
       try {
         new Notification('');
       } catch (e) {
-        if ((e as Error).name == 'TypeError') {
+        if (e.name == 'TypeError') {
           return false;
         }
       }
@@ -170,7 +170,7 @@ export class LocalNotificationsWeb
     for (const notification of this.pending) {
       if (
         notification.schedule?.at &&
-        new Date(notification.schedule.at).getTime() <= now
+        notification.schedule.at.getTime() <= now
       ) {
         this.buildNotification(notification);
         toRemove.push(notification);
@@ -184,8 +184,7 @@ export class LocalNotificationsWeb
 
   protected sendNotification(notification: LocalNotificationSchema): void {
     if (notification.schedule?.at) {
-      const diff =
-        new Date(notification.schedule.at).getTime() - new Date().getTime();
+      const diff = notification.schedule.at.getTime() - new Date().getTime();
 
       this.pending.push(notification);
       setTimeout(() => {
