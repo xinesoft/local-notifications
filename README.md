@@ -54,7 +54,7 @@ In `capacitor.config.json`:
 In `capacitor.config.ts`:
 
 ```ts
-/// <reference types="@capacitor/local-notifications" />
+/// <reference types="@xinesoft/local-notifications" />
 
 import { CapacitorConfig } from '@capacitor/cli';
 
@@ -94,8 +94,10 @@ If the device has entered [Doze](https://developer.android.com/training/monitori
 * [`listChannels()`](#listchannels)
 * [`checkPermissions()`](#checkpermissions)
 * [`requestPermissions()`](#requestpermissions)
-* [`addListener('localNotificationReceived', ...)`](#addlistenerlocalnotificationreceived)
-* [`addListener('localNotificationActionPerformed', ...)`](#addlistenerlocalnotificationactionperformed)
+* [`changeExactNotificationSetting()`](#changeexactnotificationsetting)
+* [`checkExactNotificationSetting()`](#checkexactnotificationsetting)
+* [`addListener('localNotificationReceived', ...)`](#addlistenerlocalnotificationreceived-)
+* [`addListener('localNotificationActionPerformed', ...)`](#addlistenerlocalnotificationactionperformed-)
 * [`removeAllListeners()`](#removealllisteners)
 * [Interfaces](#interfaces)
 * [Type Aliases](#type-aliases)
@@ -321,10 +323,50 @@ Request permission to display local notifications.
 --------------------
 
 
+### changeExactNotificationSetting()
+
+```typescript
+changeExactNotificationSetting() => Promise<SettingsPermissionStatus>
+```
+
+Direct user to the application settings screen to configure exact alarms.
+
+In the event that a user changes the settings from granted to denied, the application
+will restart and any notification scheduled with an exact alarm will be deleted.
+
+On Android &lt; 12, the user will NOT be directed to the application settings screen, instead this function will
+return `granted`.
+
+Only available on Android.
+
+**Returns:** <code>Promise&lt;<a href="#settingspermissionstatus">SettingsPermissionStatus</a>&gt;</code>
+
+**Since:** 6.0.0
+
+--------------------
+
+
+### checkExactNotificationSetting()
+
+```typescript
+checkExactNotificationSetting() => Promise<SettingsPermissionStatus>
+```
+
+Check application setting for using exact alarms.
+
+Only available on Android.
+
+**Returns:** <code>Promise&lt;<a href="#settingspermissionstatus">SettingsPermissionStatus</a>&gt;</code>
+
+**Since:** 6.0.0
+
+--------------------
+
+
 ### addListener('localNotificationReceived', ...)
 
 ```typescript
-addListener(eventName: 'localNotificationReceived', listenerFunc: (notification: LocalNotificationSchema) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'localNotificationReceived', listenerFunc: (notification: LocalNotificationSchema) => void) => Promise<PluginListenerHandle>
 ```
 
 Listen for when notifications are displayed.
@@ -334,7 +376,7 @@ Listen for when notifications are displayed.
 | **`eventName`**    | <code>'localNotificationReceived'</code>                                                               |
 | **`listenerFunc`** | <code>(notification: <a href="#localnotificationschema">LocalNotificationSchema</a>) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 **Since:** 1.0.0
 
@@ -344,7 +386,7 @@ Listen for when notifications are displayed.
 ### addListener('localNotificationActionPerformed', ...)
 
 ```typescript
-addListener(eventName: 'localNotificationActionPerformed', listenerFunc: (notificationAction: ActionPerformed) => void) => Promise<PluginListenerHandle> & PluginListenerHandle
+addListener(eventName: 'localNotificationActionPerformed', listenerFunc: (notificationAction: ActionPerformed) => void) => Promise<PluginListenerHandle>
 ```
 
 Listen for when an action is performed on a notification.
@@ -354,7 +396,7 @@ Listen for when an action is performed on a notification.
 | **`eventName`**    | <code>'localNotificationActionPerformed'</code>                                              |
 | **`listenerFunc`** | <code>(notificationAction: <a href="#actionperformed">ActionPerformed</a>) =&gt; void</code> |
 
-**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 **Since:** 1.0.0
 
@@ -425,6 +467,7 @@ The object that describes a local notification.
 | **`ongoing`**          | <code>boolean</code>                          | If true, the notification can't be swiped away. Calls `setOngoing()` on [`NotificationCompat.Builder`](https://developer.android.com/reference/androidx/core/app/NotificationCompat.Builder) with the provided value. Only available for Android.                                                                                                                                                                                                                                                                                                                                                                               | 1.0.0 |
 | **`autoCancel`**       | <code>boolean</code>                          | If true, the notification is canceled when the user clicks on it. Calls `setAutoCancel()` on [`NotificationCompat.Builder`](https://developer.android.com/reference/androidx/core/app/NotificationCompat.Builder) with the provided value. Only available for Android.                                                                                                                                                                                                                                                                                                                                                          | 1.0.0 |
 | **`inboxList`**        | <code>string[]</code>                         | Sets a list of strings for display in an inbox style notification. Up to 5 strings are allowed. Only available for Android.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | 1.0.0 |
+| **`silent`**           | <code>boolean</code>                          | If true, notification will not appear while app is in the foreground. Only available for iOS.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | 5.0.0 |
 
 
 #### Schedule
@@ -650,6 +693,13 @@ An action that can be taken when a notification is displayed.
 | Prop          | Type                                                        | Description                                   | Since |
 | ------------- | ----------------------------------------------------------- | --------------------------------------------- | ----- |
 | **`display`** | <code><a href="#permissionstate">PermissionState</a></code> | Permission state of displaying notifications. | 1.0.0 |
+
+
+#### SettingsPermissionStatus
+
+| Prop              | Type                                                        | Description                             | Since |
+| ----------------- | ----------------------------------------------------------- | --------------------------------------- | ----- |
+| **`exact_alarm`** | <code><a href="#permissionstate">PermissionState</a></code> | Permission state of using exact alarms. | 6.0.0 |
 
 
 #### PluginListenerHandle
