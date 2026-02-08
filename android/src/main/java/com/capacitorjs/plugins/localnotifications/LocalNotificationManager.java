@@ -256,6 +256,9 @@ public class LocalNotificationManager {
         createActionIntents(localNotification, mBuilder);
         // notificationId is a unique int for each localNotification that you must define
         Notification buildNotification = mBuilder.build();
+        if (DEFAULT_RINGTONE_CHANNEL_ID.equals(channelId)) {
+            buildNotification.flags |= Notification.FLAG_INSISTENT;
+        }
         if (localNotification.isScheduled()) {
             triggerScheduledNotification(buildNotification, localNotification);
         } else {
