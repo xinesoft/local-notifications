@@ -150,7 +150,7 @@ export class LocalNotificationsWeb
       try {
         new Notification('');
       } catch (e) {
-        if (e.name == 'TypeError') {
+        if (e instanceof Error && e.name === 'TypeError') {
           return false;
         }
       }
